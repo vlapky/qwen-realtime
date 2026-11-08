@@ -6,8 +6,8 @@
 - `Dockerfile` + `handler.py` — воркер RunPod, делает только инференс. Базовая модель (~33 ГБ)
   не входит в образ: RunPod заранее кладёт её на хост через **Cached models**, время скачивания не тарифицируется.
   LoRA и AOTI-ядра (~76 МБ) вшиты в образ. Модель загружается и прогревается один раз при старте воркера.
-- `qwen21_aoti.py` — AOTI-ядра из спейса без пакета `spaces`. Работают только на H100/H200
-  (sm_90), на других GPU воркер сам переходит в обычный режим (eager).
+- `qwen21_aoti.py` — AOTI-ядра из спейса без пакета `spaces`. Они собраны под RTX PRO 6000 Blackwell
+  (sm_120a). На других GPU, или если ядро не запустилось, воркер сам переходит в обычный режим (eager).
 - `app.py` — локальный Gradio-интерфейс. Режим **⚡ 2-step реалтайм** (512px) или **Обычный**
   (512 / 1K / 1.5K). Запрос в API уходит только по кнопке Generate.
 
@@ -24,7 +24,9 @@ git add -A && git commit -m "Qwen Image 2.1 RunPod worker" && git push
 1. Settings → Connections → GitHub → Connect (дать доступ к репозиторию).
 2. Serverless → New Endpoint → Import Git Repository → выбрать репозиторий, ветку, Dockerfile Path: `Dockerfile`.
 3. Endpoint Type: **Queue**.
-4. GPU: **H100 80GB** (или H200). На 48 ГБ (L40S / A6000 / RTX 6000 Ada) модель влезет, но без AOTI будет медленнее.
+4. GPU: **RTX PRO 6000 (Blackwell, 96 GB)**, вкладка Latest generation. AOTI-ядра спейса собраны
+   именно под него (sm_120a). На H100/H200/B200 воркер работает без AOTI (eager): шаг примерно
+   на 30% медленнее, а 512px всё равно быстро. Карты на 48 ГБ и меньше не подходят.
 5. **Model** (Cached models): `Qwen/Qwen-Image-2.1`. **Обязательно.** Без этого воркер не найдёт модель:
    на диске контейнера (~5 ГБ) её не скачать. Тогда каждый запрос вернёт ошибку
    «not in RunPod's model cache». Альтернатива — Container Disk от 40 ГБ или network volume,
@@ -61,6 +63,7 @@ export RUNPOD_API_KEY=ваш_ключ RUNPOD_ENDPOINT_ID=id_endpoint
 | Переменная | По умолчанию | Что делает |
 | --- | --- | --- |
 | `QWEN21_AOTI` | `1` | `0` — отключить AOTI-ядра |
+| `AOTI_ARCH` | `120` | Compute capability, под которую собраны AOTI-ядра |
 
 Переменные окружения для `app.py`:
 

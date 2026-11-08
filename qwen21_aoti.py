@@ -203,3 +203,11 @@ def aoti_load_pipeline(pipe, repo_id, token=None, blocks=True, decoder=True):
         vae.decoder.forward = _decoder_forward(wrapper, vae.decoder.forward)
         loaded.append(DECODER_NAME)
     return loaded, config
+
+
+def aoti_unload_pipeline(pipe):
+    """Undo aoti_load_pipeline: drop the instance-level forward overrides so the class
+    (eager) forward is used again. Used when the compiled kernels can't run on this GPU."""
+    for module in [*pipe.transformer.transformer_blocks, pipe.vae.decoder]:
+        if "forward" in module.__dict__:
+            del module.forward

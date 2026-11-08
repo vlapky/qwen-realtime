@@ -27,6 +27,7 @@ MODEL_ID = "Qwen/Qwen-Image-2.1"
 CACHED_HUB = "/runpod-volume/huggingface-cache/hub"
 LORA_PATH = os.environ.get("LORA_PATH", "/models/lora/pytorch_lora_weights_v1_5.safetensors")
 AOTI_DIR = os.environ.get("AOTI_DIR", "/models/aoti")
+AOTI_ARCH = os.environ.get("AOTI_ARCH", "120")  # compute capability the AOTI cubins target
 
 SIGMAS = [1.0, 0.5]  # the LoRA's trained schedule
 NUM_STEPS = len(SIGMAS)
@@ -142,12 +143,14 @@ try:
     )
     print(f"[load] {path} + LoRA on {torch.cuda.get_device_name()} in {time.time() - t0:.0f}s", flush=True)
 
-    capability = torch.cuda.get_device_capability()
+    # The Space's AOTI packages contain sm_120a cubins (RTX PRO 6000 Blackwell, ZeroGPU's GPU);
+    # they cannot run on other architectures (H100 = sm_90, B200 = sm_100).
+    capability = "".join(map(str, torch.cuda.get_device_capability()))
     if os.environ.get("QWEN21_AOTI", "1") == "0":
         print("[load] AOTI disabled by QWEN21_AOTI=0", flush=True)
-    elif capability != (9, 0):
-        print(f"[load] AOTI kernels are built for sm_90 (H100/H200); this GPU is sm_{capability[0]}{capability[1]}, "
-              "running eager", flush=True)
+    elif capability != AOTI_ARCH:
+        print(f"[load] AOTI kernels are built for sm_{AOTI_ARCH}a (RTX PRO 6000 Blackwell); this GPU is "
+              f"sm_{capability}, running eager", flush=True)
     else:
         try:
             from qwen21_aoti import aoti_load_pipeline
@@ -178,12 +181,33 @@ def render(prompt, images, seed, resolution, aspect_ratio):
 
 
 # Warm-up: loads the AOTI .so files and initialises cuBLAS/cuDNN before the first real job.
-if LOAD_ERROR is None:
+def warm_up():
     t0 = time.time()
     for res in (512, 1024):
         render("warm-up", [], 0, res, None)
     torch.cuda.synchronize()
-    print(f"[load] warm-up done in {time.time() - t0:.0f}s; worker ready", flush=True)
+    print(f"[load] warm-up done in {time.time() - t0:.0f}s; worker ready (aoti={AOTI})", flush=True)
+
+
+if LOAD_ERROR is None:
+    try:
+        warm_up()
+    except Exception as exc:  # noqa: BLE001
+        if AOTI:
+            # e.g. "no kernel image is available for execution on the device": fall back to eager.
+            print(f"[load] AOTI kernels failed on this GPU ({exc}); switching to eager", flush=True)
+            from qwen21_aoti import aoti_unload_pipeline
+
+            aoti_unload_pipeline(pipe)
+            AOTI = []
+            try:
+                warm_up()
+            except Exception as exc2:  # noqa: BLE001
+                LOAD_ERROR = f"warm-up failed: {exc2}"
+        else:
+            LOAD_ERROR = f"warm-up failed: {exc}"
+    if LOAD_ERROR:
+        print(f"[load] {LOAD_ERROR}", flush=True)
 
 
 # --------------------------------------------------------------------------------------
