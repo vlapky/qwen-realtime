@@ -69,53 +69,96 @@ def resolve_size(resolution, aspect_ratio):
     return tuple(max(32, int(round(v * scale / 32)) * 32) for v in (base_w, base_h))
 
 
-def model_path():
-    """Local snapshot from RunPod's model cache, else the Hub id (downloads on first start)."""
-    snaps = sorted(glob.glob(f"{CACHED_HUB}/models--{MODEL_ID.replace('/', '--')}/snapshots/*/"))
-    if snaps:
-        return snaps[-1]
-    print(f"[load] no cached model under {CACHED_HUB}; downloading {MODEL_ID} from the Hub", flush=True)
-    return MODEL_ID
+NEEDED_GB = 40  # bf16 weights (~33 GB) + headroom
 
 
-# --------------------------------------------------------------------------------------
-# Load once per worker
-# --------------------------------------------------------------------------------------
-
-t0 = time.time()
-path = model_path()
-pipe = QwenImage21Pipeline.from_pretrained(path, torch_dtype=torch.bfloat16)
-pipe.scheduler = FlowMatchEulerDiscreteScheduler.from_config(
-    pipe.scheduler.config, use_dynamic_shifting=False, shift=1.0, shift_terminal=None
-)
-# Fuse the LoRA so the AOTI graphs (compiled for the base arch, weights as inputs) apply unchanged.
-pipe.load_lora_weights(os.path.dirname(LORA_PATH), weight_name=os.path.basename(LORA_PATH), adapter_name="v1")
-pipe.fuse_lora()
-pipe.unload_lora_weights()
-pipe = pipe.to("cuda")
-pipe.vae.enable_tiling(
-    tile_sample_min_height=1536,
-    tile_sample_min_width=1536,
-    tile_sample_stride_height=1152,
-    tile_sample_stride_width=1152,
-)
-print(f"[load] {path} + LoRA on {torch.cuda.get_device_name()} in {time.time() - t0:.0f}s", flush=True)
-
-AOTI = []
-capability = torch.cuda.get_device_capability()
-if os.environ.get("QWEN21_AOTI", "1") == "0":
-    print("[load] AOTI disabled by QWEN21_AOTI=0", flush=True)
-elif capability != (9, 0):
-    print(f"[load] AOTI kernels are built for sm_90 (H100/H200); this GPU is sm_{capability[0]}{capability[1]}, "
-          "running eager", flush=True)
-else:
+def free_gb(path):
     try:
-        from qwen21_aoti import aoti_load_pipeline
+        st = os.statvfs(path)
+        return st.f_bavail * st.f_frsize / 1e9
+    except OSError:
+        return 0.0
 
-        AOTI, cfg = aoti_load_pipeline(pipe, AOTI_DIR)
-        print(f"[load] AOTI {AOTI} (built for torch {cfg['torch']})", flush=True)
-    except Exception as exc:  # noqa: BLE001
-        print(f"[load] AOTI unavailable, running eager: {exc!r}", flush=True)
+
+def describe_volume():
+    """What RunPod mounted under /runpod-volume (helps when the model cache is missing)."""
+    if not os.path.isdir("/runpod-volume"):
+        return "/runpod-volume is not mounted"
+    found = sorted(glob.glob("/runpod-volume/*") + glob.glob("/runpod-volume/*/*") + glob.glob(f"{CACHED_HUB}/*"))
+    return f"/runpod-volume ({free_gb('/runpod-volume'):.0f} GB free): " + (", ".join(found[:30]) or "empty")
+
+
+def model_path():
+    """Where to load Qwen-Image-2.1 from: MODEL_PATH, RunPod's model cache, or a fresh download
+    to a disk with enough space. Raises a readable error instead of filling a small disk."""
+    if os.environ.get("MODEL_PATH"):
+        return os.environ["MODEL_PATH"]
+    repo_dir = f"models--{MODEL_ID.replace('/', '--')}"
+    snaps = sorted(glob.glob(f"/runpod-volume/**/{repo_dir}/snapshots/*/", recursive=True),
+                   key=lambda d: (not d.startswith(CACHED_HUB), d))
+    snaps = [d for d in snaps if os.path.exists(os.path.join(d, "model_index.json"))]
+    if snaps:
+        return snaps[0]
+    print(f"[load] {MODEL_ID} not found in RunPod's model cache. {describe_volume()}", flush=True)
+    # Network volume (persists between workers) first, then the container disk.
+    for cache in ("/runpod-volume/hf-cache", os.path.expanduser("~/.cache/huggingface/hub")):
+        root = "/runpod-volume" if cache.startswith("/runpod-volume") else "/"
+        if os.path.isdir(root) and os.access(root, os.W_OK) and free_gb(root) >= NEEDED_GB:
+            print(f"[load] downloading {MODEL_ID} to {cache} ({free_gb(root):.0f} GB free)", flush=True)
+            from huggingface_hub import snapshot_download
+
+            return snapshot_download(MODEL_ID, cache_dir=cache)
+    raise RuntimeError(
+        f"{MODEL_ID} is not in RunPod's model cache and no disk has {NEEDED_GB} GB free to download it "
+        f"(container disk: {free_gb('/'):.0f} GB). Fix: Edit Endpoint -> Model = {MODEL_ID} "
+        f"(cached models), or raise Container Disk to {NEEDED_GB}+ GB, or attach a network volume."
+    )
+
+
+# --------------------------------------------------------------------------------------
+# Load once per worker. A load failure is reported on every job instead of crash-looping,
+# so the client sees the reason and RunPod scales the worker down after the idle timeout.
+# --------------------------------------------------------------------------------------
+
+LOAD_ERROR = None
+AOTI = []
+try:
+    t0 = time.time()
+    path = model_path()
+    pipe = QwenImage21Pipeline.from_pretrained(path, dtype=torch.bfloat16)
+    pipe.scheduler = FlowMatchEulerDiscreteScheduler.from_config(
+        pipe.scheduler.config, use_dynamic_shifting=False, shift=1.0, shift_terminal=None
+    )
+    # Fuse the LoRA so the AOTI graphs (compiled for the base arch, weights as inputs) apply unchanged.
+    pipe.load_lora_weights(os.path.dirname(LORA_PATH), weight_name=os.path.basename(LORA_PATH), adapter_name="v1")
+    pipe.fuse_lora()
+    pipe.unload_lora_weights()
+    pipe = pipe.to("cuda")
+    pipe.vae.enable_tiling(
+        tile_sample_min_height=1536,
+        tile_sample_min_width=1536,
+        tile_sample_stride_height=1152,
+        tile_sample_stride_width=1152,
+    )
+    print(f"[load] {path} + LoRA on {torch.cuda.get_device_name()} in {time.time() - t0:.0f}s", flush=True)
+
+    capability = torch.cuda.get_device_capability()
+    if os.environ.get("QWEN21_AOTI", "1") == "0":
+        print("[load] AOTI disabled by QWEN21_AOTI=0", flush=True)
+    elif capability != (9, 0):
+        print(f"[load] AOTI kernels are built for sm_90 (H100/H200); this GPU is sm_{capability[0]}{capability[1]}, "
+              "running eager", flush=True)
+    else:
+        try:
+            from qwen21_aoti import aoti_load_pipeline
+
+            AOTI, cfg = aoti_load_pipeline(pipe, AOTI_DIR)
+            print(f"[load] AOTI {AOTI} (built for torch {cfg['torch']})", flush=True)
+        except Exception as exc:  # noqa: BLE001
+            print(f"[load] AOTI unavailable, running eager: {exc!r}", flush=True)
+except Exception as exc:  # noqa: BLE001
+    LOAD_ERROR = f"worker failed to load the model: {exc}"
+    print(f"[load] {LOAD_ERROR}", flush=True)
 
 
 def render(prompt, images, seed, resolution, aspect_ratio):
@@ -135,11 +178,12 @@ def render(prompt, images, seed, resolution, aspect_ratio):
 
 
 # Warm-up: loads the AOTI .so files and initialises cuBLAS/cuDNN before the first real job.
-t0 = time.time()
-for res in (512, 1024):
-    render("warm-up", [], 0, res, None)
-torch.cuda.synchronize()
-print(f"[load] warm-up done in {time.time() - t0:.0f}s; worker ready", flush=True)
+if LOAD_ERROR is None:
+    t0 = time.time()
+    for res in (512, 1024):
+        render("warm-up", [], 0, res, None)
+    torch.cuda.synchronize()
+    print(f"[load] warm-up done in {time.time() - t0:.0f}s; worker ready", flush=True)
 
 
 # --------------------------------------------------------------------------------------
@@ -149,6 +193,8 @@ print(f"[load] warm-up done in {time.time() - t0:.0f}s; worker ready", flush=Tru
 
 def handler(job):
     inp = job.get("input") or {}
+    if LOAD_ERROR:
+        return {"error": LOAD_ERROR}
     if inp.get("warmup"):
         return {"ready": True, "aoti": AOTI, "gpu": torch.cuda.get_device_name()}
 

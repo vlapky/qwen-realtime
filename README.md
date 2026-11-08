@@ -25,7 +25,10 @@ git add -A && git commit -m "Qwen Image 2.1 RunPod worker" && git push
 2. Serverless → New Endpoint → Import Git Repository → выбрать репозиторий, ветку, Dockerfile Path: `Dockerfile`.
 3. Endpoint Type: **Queue**.
 4. GPU: **H100 80GB** (или H200). На 48 ГБ (L40S / A6000 / RTX 6000 Ada) модель влезет, но без AOTI будет медленнее.
-5. **Model** (Cached models): `Qwen/Qwen-Image-2.1`.
+5. **Model** (Cached models): `Qwen/Qwen-Image-2.1`. **Обязательно.** Без этого воркер не найдёт модель:
+   на диске контейнера (~5 ГБ) её не скачать. Тогда каждый запрос вернёт ошибку
+   «not in RunPod's model cache». Альтернатива — Container Disk от 40 ГБ или network volume,
+   но тогда модель будет скачиваться при каждом холодном старте или храниться на более медленном volume.
 6. Advanced → Allowed CUDA versions: **13.0** и новее (torch 2.13+cu130).
 7. Холодный старт:
    - FlashBoot: включён.
