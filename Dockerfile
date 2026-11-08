@@ -1,4 +1,4 @@
-# RunPod Serverless worker for Qwen-Image-2.1 + 2-step DMD2 LoRA (see runpod_worker/handler.py).
+# RunPod Serverless worker for Qwen-Image-2.1 + 2-step DMD2 LoRA (see handler.py).
 # The base model is NOT baked in: set the endpoint's "Model" field to Qwen/Qwen-Image-2.1 so RunPod
 # pre-caches it on the host (/runpod-volume/huggingface-cache/hub). LoRA + AOTI kernels (~76 MB) are baked.
 FROM python:3.12-slim
@@ -22,6 +22,6 @@ RUN hf download linoyts/Qwen-Image-2.1-DMD2-2steps pytorch_lora_weights_v1_5.saf
  && rm -rf /models/*/.cache
 
 WORKDIR /app
-COPY runpod_worker/handler.py runpod_worker/qwen21_aoti.py ./
+COPY handler.py qwen21_aoti.py ./
 
 CMD ["python", "-u", "handler.py"]

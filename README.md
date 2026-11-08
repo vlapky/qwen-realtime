@@ -3,10 +3,10 @@
 Копия спейса [linoyts/qwen-image-2-1-realtime](https://huggingface.co/spaces/linoyts/qwen-image-2-1-realtime).
 Модель та же: Qwen-Image-2.1 + 2-step DMD2 LoRA (вшита в веса), sigmas [1.0, 0.5], CFG 1, AOTI-ядра.
 
-- `Dockerfile` + `runpod_worker/handler.py` — воркер RunPod, делает только инференс. Базовая модель (~33 ГБ)
+- `Dockerfile` + `handler.py` — воркер RunPod, делает только инференс. Базовая модель (~33 ГБ)
   не входит в образ: RunPod заранее кладёт её на хост через **Cached models**, время скачивания не тарифицируется.
   LoRA и AOTI-ядра (~76 МБ) вшиты в образ. Модель загружается и прогревается один раз при старте воркера.
-- `runpod_worker/qwen21_aoti.py` — AOTI-ядра из спейса без пакета `spaces`. Работают только на H100/H200
+- `qwen21_aoti.py` — AOTI-ядра из спейса без пакета `spaces`. Работают только на H100/H200
   (sm_90), на других GPU воркер сам переходит в обычный режим (eager).
 - `app.py` — локальный Gradio-интерфейс. Режим **⚡ 2-step реалтайм** (512px) или **Обычный**
   (512 / 1K / 1.5K). Запрос в API уходит только по кнопке Generate.

@@ -1,5 +1,5 @@
 """Local Gradio UI for Qwen-Image-2.1 Realtime; inference runs on a RunPod Serverless endpoint
-(Dockerfile + runpod_worker/).
+(Dockerfile + handler.py).
 
 Nothing is sent to the API until you press Generate. Two modes:
 * ⚡ 2-step realtime: 512px, WebP, fastest round trip.
