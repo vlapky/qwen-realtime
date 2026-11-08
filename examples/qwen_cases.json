@@ -1,0 +1,118 @@
+[
+ {
+  "title": "透明婚纱角色立绘",
+  "title_en": "Transparent anime bride",
+  "inputs": [],
+  "prompt": "这是一张带有透明度的RGBA格式图像，呈现一位身着华丽婚纱的动漫风格女性角色。画面中无任何可识别的文字信息。角色为年轻女性，拥有白皙肌肤、红润脸颊与明亮红色眼眸，面带温柔微笑，表情甜美而幸福。她头戴精致银色皇冠与白色蕾丝头纱，金色长发自然垂落肩头，发丝柔顺且富有光泽。身穿多层荷叶边设计的粉白渐变抹胸婚纱，裙摆蓬松飘逸，层次丰富，材质轻盈如花瓣般展开；胸前手持一束由白色玫瑰与绿色叶片组成的捧花，花束饱满，绿叶点缀其间，增添清新感。双腿修长，穿着透明薄纱质感的过膝袜与饰有玫瑰图案的白色高跟鞋，姿态优雅站立，双手轻握捧花置于腹前。整体构图为全身正面视角，色彩柔和梦幻，以粉、白、绿为主色调，光影细腻，具有典型的日系二次元插画美学风格，适用于游戏立绘、视觉小说或数字艺术收藏等场景。 该图像具有alpha通道，背景是透明的。",
+  "prompt_extend": false,
+  "outputs": [
+   "transparent_anime_bride.png"
+  ],
+  "generation": {
+   "model": "pre-qwen-image-2.1-pro-yunqi",
+   "request_id": "2f8fcfe4-ef0a-9f4d-8ed6-fc3ba0792ea1",
+   "seed": 42,
+   "prompt_extend": false,
+   "size": [
+    1664,
+    2496
+   ],
+   "mode": "RGBA",
+   "alpha_extrema": [
+    0,
+    255
+   ]
+  }
+ },
+ {
+  "title": "信息图",
+  "title_en": "Character style infographic",
+  "source_title": "信息图",
+  "inputs": [
+   "ff689e81-11c8-415e-852e-4e08ac0d0ea3.webp"
+  ],
+  "prompt": "将输入图片转化为日系杂志风的「人物风格信息图」海报，**严格保持输入人物的面容、五官与气质不变**。版面采用月白底与浅灰线网格，整体清冷、高级、通透。\n\n【版面与文字位置】\n- 顶部留出一条**独立的横向标题栏**（贯穿画面顶部的空白留白带），大标题“月白纱语”置于此标题栏内左中位置，右侧副标题“VOL.05 · 清冷艺术”，最右端椭圆徽标内“写真特辑”。\n- 中央人物立绘**整体适当下移并居中**，人物（含头顶发髻）**不得进入顶部标题栏、不得遮挡或压住任何文字**；人物头顶与标题之间保留明显空白。\n- 各信息卡片沿左右两栏与下方排布，文字均在各自卡片内，不被人物遮挡。\n- 排版精致、留白充足、有呼吸感。\n\n【字体】所有文字采用清晰、精致、美观的字体；大标题使用优雅的中文衬线/艺术字体（笔画利落、有设计感、精致高级），正文用清秀易读的黑体；字形端正、无错字无乱码。\n\n【中央人物】身着白色欧根纱一字肩荷叶边长裙、腰间黑色缎带，高扎发，气质清冷优雅；左侧标注“168cm”、“身姿修长 — 天鹅颈优越”。\n\n左上“个人档案”，逐行：“风格定位 清冷高级感艺术女性”、“适合色系 月白/雾灰/裸粉”、“避免色系 荧光色/高饱和撞色”、“身材优势 天鹅颈/肩颈线/纤细四肢”、“穿搭关键词 纱质/透视/垂坠/解构”。\n左中“配饰细节”，四项：“珍珠耳饰 优雅点睛”、“黑色缎带 束腰点缀”、“细链项链 锁骨修饰”、“银质戒指 精致细节”。\n左下“人物时间线”四段：“晨间护肤”、“精致妆发”、“棚拍写真”、“艺术观展”。其下“搭配建议”：“方案一 清冷极简 #F2ECE9”、“方案二 艺术编辑 #C9BBB2”。\n右上“属性卡片”三头像：“凝视 | 冷白皮妆 | 高扎发 时尚大片”、“侧颜 | 雾面裸妆 | 湿发感 艺术写真”、“慵懒 | 水光裸妆 | 低盘发 杂志封面”。\n右中“服饰细节”四项：“欧根纱质”、“一字露肩”、“荷叶边饰”、“波点透纱”。\n右中“服饰色卡”标题“月白冷调”，6色块依次：“#FFFFFF 月白”、“#F2ECE9 珍珠白”、“#E5DED9 雾灰白”、“#D8CEC7 浅灰驼”、“#BFB2A8 裸棕”、“#2E2C2D 缎带黑”。\n右下“性格标签”雷达五维：“高级感 92%”、“清冷感 88%”、“艺术感 90%”、“氛围感 85%”、“松弛感 80%”。\n右下“场景推荐”四条：“美术馆 · 静谧午后”、“摄影棚 · 时尚大片”、“高级料理 · 微醺夜”、“艺术展 · 光影漫步”。\n底部“风格关键词”词云，仅含：“高级感”、“清冷风”、“氛围感”、“纱感”、“艺术感”、“杂志风”、“松弛感”、“仙气”、“编辑风”。\n\n【文字要求】画面中所有文字必须是以上明确指定的中文，逐字准确、清晰可读、无错字无乱码；不要生成任何未指定的多余文字。",
+  "prompt_extend": false,
+  "outputs": [
+   "2fac1fad-886d-4344-b6b2-97ed05cf1b35.webp"
+  ]
+ },
+ {
+  "title": "发型编辑",
+  "title_en": "Hairstyle editing",
+  "source_title": "人像3",
+  "inputs": [
+   "2d02ee93-6278-4aa9-8fb9-3ca8d4c89dbb.webp"
+  ],
+  "prompt": "将输入图片中年轻女性的发型由当前盘起的束发与脸颊旁垂落的碎发改为蓬松的大波浪长卷发，让长发自头顶自然披落至双肩与胸前，卷度呈大而清晰的波浪弧形、层次分明且发丝带有柔和光泽，原本散落在脸颊与颈侧的碎发顺势融入整体波浪卷的走向之中；新发型的受光与阴影顺应画面既有的柔和户外自然光，在卷曲的凹陷处形成自然的柔和暗部、在发脊处形成细腻高光。此为在原图上的局部编辑，保持原图的取景、构图、缩放级别与人物在画面中的大小位置不变，不作重新构图或整体重绘，画面其余部分均与输入图保持一致。",
+  "prompt_extend": false,
+  "outputs": [
+   "4f703275-173e-405e-9a86-c86cc8fde01b.webp"
+  ]
+ },
+ {
+  "title": "表情编辑",
+  "title_en": "Expression editing",
+  "source_title": "人像4",
+  "inputs": [
+   "01d3fe21-162f-4dc0-8bf6-dcc4165125bb.webp"
+  ],
+  "prompt": "将输入图片中并肩站立的两位年轻女性的表情由抿嘴浅笑改为一同开口大笑：两人均张嘴露齿开怀大笑，笑肌提起、嘴角大幅上扬，双眼因笑意弯成明亮的月牙形，眉宇舒展，两人的笑容情绪相互呼应、程度一致；同时将动作调整为一起比耶的活泼状态，左侧女生把原本背在身后的一只手举起到脸颊外侧，食指与中指自然伸直张开成V字比耶手势、手指结构完整清晰，右侧女生已举起的比耶手调整为更俏皮用力的角度，掌中所握的白色梳子仍稳稳握持、握姿符合真实受力关系；再配以轻快的肢体语言，两人头部朝彼此方向歪斜成俏皮的靠近角度、肩膀放松且身体轻轻相靠，使整幅画面充满活泼灵动的互动感。此为在原图上的局部编辑，保持原图的取景、构图、缩放级别与两人在画面中的大小位置不变，新增抬起的手臂与手部、以及大笑表情的受光与阴影均遵循原图户外自然光的统一光照逻辑，画面其余部分与输入图保持一致、不作重绘或重新构图。",
+  "prompt_extend": false,
+  "outputs": [
+   "6a84c701-3388-498d-abf8-eea1cf1d1667.webp"
+  ]
+ },
+ {
+  "title": "老照片修复",
+  "title_en": "Vintage photo restoration",
+  "source_title": "老照片",
+  "inputs": [
+   "8c265cf7-51ec-44fd-9436-30fbd96491de.webp"
+  ],
+  "prompt": "Significantly improve the resolution and overall clarity of this vintage photograph and restore it as a realistic, naturally colorized high-fidelity photograph. Remove age-related dust, scratches, spots, fading, and excessive grain; recover fine detail and balanced highlights and shadows without oversharpening, waxy skin, or painted textures. Restore the seated elderly man with unruly white hair and a mustache, holding a curved tobacco pipe in his mouth and writing on paper. Preserve his exact facial anatomy, wrinkles, gaze, head angle, pipe contact with the mouth, and both hands, including the precise grip of the pen and the hand resting near the paper. Clarify fine hair, eyebrows, mustache, natural skin texture, the ribbed knit sweater, white shirt collar, and curved pipe stem without altering his expression. Recover the patterned chair upholstery, dark shelves and books behind him, and the foreground paper while maintaining the original depth of field. Colorize with realistic skin tones, silver-white hair, a muted warm gray knitted sweater, ivory collar and paper, a dark brown wooden pipe with a black stem, subdued burgundy and gold-brown upholstery, and dark wooden bookshelves. Keep the original indoor light and tonal modeling; do not fabricate handwriting, add smoke, or change the chair pattern. Strictly preserve the original aspect ratio, framing, camera viewpoint, exact number and arrangement of people, identities, ages, poses, expressions, clothing designs, object placement, and occlusions. Preserve the original direction and character of the lighting. Use believable, restrained colors appropriate to the period and materials, with lifelike skin tones and no color bleeding; produce a full-color photograph, not monochrome or sepia. Where the original is unclear, retain natural softness rather than inventing anatomy, objects, symbols, or readable text. Do not crop, expand, beautify faces, modernize the scene, or alter existing printed marks.",
+  "prompt_extend": false,
+  "outputs": [
+   "16708ba4-0aac-4247-9ccc-3d8c4b4e27d8.webp"
+  ]
+ },
+ {
+  "title": "旅行规划应用界面",
+  "title_en": "Travel planner UI",
+  "source_title": "文字T2I",
+  "inputs": [],
+  "prompt": "The image is a vertical smartphone screenshot of a modern travel planner app interface named \"Wanderlust\", designed with a clean, light-themed aesthetic, soft shadows, and rounded corners, fully occupying the screen. The top edge features a standard status bar with black text \"9:41\" on the left, and on the right, black cellular signal bars, a Wi-Fi icon, and a battery icon showing \"85%\". Below the status bar is a top navigation bar. On the left, a circular user avatar shows a smiling young woman with a light blue background. Next to it, bold black text reads \"Good morning,\nSarah\". On the far right, a dark gray rounded square icon contains a white gear symbol for settings.\n\nThe main hero section is a large, rounded-corner card with a soft drop shadow. The background is a vibrant, high-quality photograph of the Santorini coastline with white cubic buildings and bright blue domes against a clear sky. Overlaid on the bottom left of the image is a semi-transparent dark gradient. Text inside reads \"Santorini,\nGreece\" in large bold white font, followed by \"Oct 12 -\nOct 19\" in smaller white font. On the bottom right, a solid white rounded button contains black text \"View\nItinerary\". At the very top right of this card, a small white pill-shaped badge contains black text \"5 Days\nLeft\".\n\nBelow the hero card is a section titled \"Plan Your Trip\" in bold dark gray text. Underneath is a row of four evenly spaced, light gray rounded square cards with subtle borders. The first card contains a blue airplane icon and black text \"Flights\" below. The second card contains an orange bed icon and black text \"Hotels\" below. The third card contains a green camera icon and black text \"Activities\" below. The fourth card contains a purple train icon and black text \"Transfers\" below.\n\nThe next section is titled \"Suggested for You\" in bold black text, with a blue text link \"See All\" aligned to the right. Below is a vertical list of three destination recommendation cards, each with a white background and a soft shadow. The first card has a square thumbnail of the Eiffel Tower on the left. The right side has the title \"Paris\" in bold black, the subtitle \"Romantic\nGetaway\" in dark gray, and a bottom row containing a yellow star icon, black text \"4.8\", and a small light gray pill with black text \"Flights from\n$450\". The second card has a square thumbnail of the Colosseum on the left. The right side has the title \"Rome\" in bold black, the subtitle \"Historical\nTour\" in dark gray, and a bottom row containing a yellow star icon, black text \"4.7\", and a small light gray pill with black text \"Flights from\n$520\". The third card has a square thumbnail of a Swiss Alpine village on the left. The right side has the title \"Zermatt\" in bold black, the subtitle \"Mountain\nRetreat\" in dark gray, and a bottom row containing a yellow star icon, black text \"4.9\", and a small light gray pill with black text \"Flights from\n$600\".\n\nBelow the suggestions is a section titled \"Past Trips\" in bold black text. This section contains a vertical list of two past trip history cards. The first card features a rectangular thumbnail of the neon-lit Shibuya crossing on the left. The middle area displays the title \"Tokyo,\nJapan\" in bold black text and the dates \"Aug 05 -\nAug 12\" in dark gray text. The right side features a solid blue rounded button with white text \"Rebook\". The second card features a rectangular thumbnail of the red rocks of the Grand Canyon on the left. The middle area displays the title \"Arizona,\nUSA\" in bold black text and the dates \"May 10 -\nMay 15\" in dark gray text. The right side features a solid blue rounded button with white text \"Rebook\".\n\nThe bottom layer is a fixed bottom navigation bar with a pure white background and a subtle top shadow, spanning the full width. It contains four evenly spaced interactive elements. The first element is a solid blue home icon with blue text \"Home\" directly below. The second element is a gray magnifying glass icon with gray text \"Explore\" directly below. The third element is a gray calendar icon with gray text \"Bookings\" directly below. The fourth element is a gray person icon with gray text \"Profile\" directly below. The entire interface uses a consistent design language with uniform corner radii, a harmonious color palette of white, light gray, dark gray, and vibrant blue accents, and clear typographic hierarchy ensuring all text is perfectly readable.",
+  "prompt_extend": false,
+  "outputs": [
+   "f263765e-e4d7-4683-87dd-b18fa77280a7.webp"
+  ]
+ },
+ {
+  "title": "数学试卷",
+  "title_en": "Mathematics exam paper",
+  "source_title": "",
+  "inputs": [],
+  "prompt": "这是一张2026年数学高考试卷的平面设计图，画面直接呈现试卷版面，全出血排版，试卷边缘即为画布边缘。试卷整体为纯白底色，文字和图形均为黑色印刷效果，排版严谨规范，采用标准的高考卷面布局。页面左侧边缘有一条垂直的虚线作为装订密封线。页面顶部居中位置印有黑色粗体大字“绝密★启用前”。其下方是大标题，居中印有“2026年普通高等学校招生全国统一考试 数学”。大标题下方是“注意事项”部分，使用黑色正楷体，分条列出考生须知，内容依次为：“1. 答卷前，考生务必将自己的 姓名、准考证号填写在答题卡上。 2. 回答选择题时，选出每小题答案后， 用铅笔把答题卡上对应题目的答案标号涂黑。 3. 回答非选择题时，将答案写在答题卡上。 写在本试卷上无效。 4. 考试结束后，将本试卷和答题卡一并交回。”注意事项下方是试卷正文部分，采用标准宋体印刷。第一大部分标题为“一、单项选择题：本题共8小题， 每小题5分，共40分。”紧接着是第1题：“1. 已知集合A={x|x²-3x+2=0}， B={x|x²-2x=0}，则A∩B=”，下方列出四个选项：“A. {0} B. {1} C. {2} D. {0, 2}”。第2题为：“2. 若复数z满足z(1+i)=2， 则|z|=”，下方选项为：“A. 1 B. √2 C. 2 D. 2√2”。中间穿插有填空题部分，标题为“二、填空题：本题共4小题， 每小题5分，共20分。”，其中第9题为：“9. 已知向量a=(1, 2)，b=(x, -1)， 若a⊥b，则x=______。”页面下半部分为解答题区域，标题为“三、解答题：本题共5小题，共70分。”第15题内容为：“15.（13分）在△ABC中，内角A, B, C 的对边分别为a, b, c，已知 acosC+ccosA=bsinB。 （1）求角B的大小； （2）若b=2，求△ABC面积的最大值。”题目右侧空白处配有一个简单的黑色线条绘制的三角形几何示意图，顶点分别标有字母“A”、“B”、“C”。整个卷面文字清晰，数学公式排版规范，行距适中，呈现出标准的高考试卷视觉效果。",
+  "prompt_extend": false,
+  "outputs": [
+   "6ae02ff5-e65f-45c9-81e9-daca1931b62b.webp"
+  ]
+ },
+ {
+  "title": "多品穿戴（5 图）",
+  "title_en": "Outfit styling (5 images)",
+  "source_title": "多图-多品穿戴",
+  "inputs": [
+   "447da49d-dcd0-46ec-9ca8-20127c0f07d1.webp",
+   "0f2d052b-6ccf-46e2-821d-d073ead679ac.webp",
+   "3f4d7519-6c33-491f-bad8-661f1bf03601.webp",
+   "0f5d38f9-d04a-498e-aaef-9dae01da8c6d.webp",
+   "3acf3276-0572-490e-b8ce-334833a6ca20.webp"
+  ],
+  "prompt": "让【图1】中的模特换上【图3】中的玛丽珍鞋，拿着【图4】中的手提包，并戴上【图5】中的绒毛帽。将【图2】中的羽绒服敞开穿在外面，露出原有的内搭上衣。保持模特姿势和背景不变。",
+  "prompt_extend": false,
+  "outputs": [
+   "90972d17-5686-4a88-a605-6b175137f655.webp"
+  ]
+ }
+]
